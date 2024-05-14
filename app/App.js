@@ -1,23 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, SafeAreaView } from 'react-native';
+import { colors } from './src/utils/colors';
+import { Ingredients } from './src/features/Ingredients';
+import { IngredientsList } from './src/features/IngredientsList';
 
 export default function App() {
+  const [history, setHistory] = useState([]);
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style={styles.statusBar} />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Ingredients 
+        addIngredient={(ingredient) => {
+          setHistory([...history, ingredient])
+        }}
+      />
+      <IngredientsList history={history} />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.darkBlue,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  statusBar: {
-    backgroundColor: '#000000'
-  }
 });
