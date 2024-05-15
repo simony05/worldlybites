@@ -5,7 +5,15 @@ import { Ingredients } from './src/features/Ingredients';
 import { IngredientsList } from './src/features/IngredientsList';
 
 export default function App() {
+
   const [history, setHistory] = useState([]);
+  const handleDelete = (index) => {
+    const newList = [...history];
+    newList.splice(index, 1);
+    setHistory(newList);
+    console.log(newList);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Ingredients 
@@ -13,7 +21,7 @@ export default function App() {
           setHistory([...history, ingredient])
         }}
       />
-      <IngredientsList history={history} />
+      <IngredientsList history={history} onDelete={handleDelete} />
     </SafeAreaView>
   );
 }

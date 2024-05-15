@@ -1,18 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, Button, StyleSheet, FlatList , Keyboard } from 'react-native';
 import { colors } from '../utils/colors';
 import { fontSizes, spacing } from '../utils/sizes';
 
-export const IngredientsList = ({ history }) => {
+export const IngredientsList = ({ history, onDelete }) => {
 
-    const renderItem = ({item}) => <Text style={styles.item}>- {item}</Text>
+    const renderItem = ({ item, index }) => (
+        <View>
+            <Text style={styles.item}>- {item}, {index}</Text>
+            <Button title='X' onPress={() => onDelete(index)} />
+        </View>
+    );
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Ingredients List</Text>
             <FlatList 
+                onScrollBeginDrag={() => Keyboard.dismiss()}
                 data={history} 
                 renderItem={renderItem} 
+                keyExtractor={(item, index) => index.toString()}
             />
         </View>
     );
