@@ -5,6 +5,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+
+# test: /recipe?ingredients= pasta tomato onion
 @app.route('/recipe', methods=["GET"])
 def recommend_recipe():
     # This is our endpoint.

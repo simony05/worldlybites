@@ -18,7 +18,7 @@ export default function App() {
           component={HomeScreen}
         />
         <Tab.Screen 
-          name="Recipe"
+          name="Recipes"
           component={RecipeScreen}
         />
       </Tab.Navigator>

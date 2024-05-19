@@ -8,7 +8,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 def get_recommendations(N, scores):
     # load in recipe dataset
-    df_recipes = pd.read_csv("parsed_recipes.csv")
+    df_recipes = pd.read_csv("backend/parsed_recipes.csv")
 
     # order the scores with and filter to get the highest N scores
     top = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:N]
@@ -17,7 +17,7 @@ def get_recommendations(N, scores):
     recommendations = pd.DataFrame(columns = ['Title', 'Ingredients', 'Instructions', 'Image_Name', 'Cuisine'])
 
     # cuisine prediction model
-    with open("cuisine.pk", "rb") as f:
+    with open("backend/cuisine.pk", "rb") as f:
         cuisine = pickle.load(f)
     
     count = 0
@@ -45,9 +45,9 @@ def rec_api(ingredients, N=5):
     """
 
     # load in tdidf model and encodings
-    with open("encoding.pk", 'rb') as f:
+    with open("backend/encoding.pk", 'rb') as f:
         tfidf_encodings = pickle.load(f)
-    with open("model.pk", "rb") as f:
+    with open("backend/model.pk", "rb") as f:
         tfidf = pickle.load(f)
         
     # parse the ingredients using my ingredient_parser

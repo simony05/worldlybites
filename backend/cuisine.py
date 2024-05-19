@@ -37,7 +37,7 @@ df_test = pd.read_json('recipe_data/test.json')
 
 print(cuisine_classifier.predict(df_test['ingredients'].apply(lambda x:  ' '.join(x))))
 
-pickle.dump(cuisine_classifier, open('cuisine.pk', 'wb'))
+pickle.dump(cuisine_classifier, open('backend/cuisine.pk', 'wb'))
 
 #with open("cuisine.pk", "rb") as f:
 #        test = pickle.load(f)

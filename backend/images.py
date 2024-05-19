@@ -1,6 +1,6 @@
 import pandas as pd
 import base64
-data = pd.read_csv("parsed_recipes.csv")
+data = pd.read_csv("backend/parsed_recipes.csv")
 name = data.iloc[9999]['Image_Name']
 print(data.iloc[9999])
 

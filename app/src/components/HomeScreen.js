@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, Button } from 'react-native';
 import { colors } from '../utils/colors';
 import { Ingredients } from '../features/Ingredients';
 import { IngredientsList } from '../features/IngredientsList';
 
-export const HomeScreen = () => {
+export const HomeScreen = ({ navigation }) => {
 
     const [history, setHistory] = useState([]);
     const handleDelete = (index) => {
         const newList = [...history];
         newList.splice(index, 1);
         setHistory(newList);
-        console.log(newList);
+        //console.log(newList);
     }
 
     return (
@@ -22,6 +22,7 @@ export const HomeScreen = () => {
                 }}
             />
             <IngredientsList history={history} onDelete={handleDelete} />
+            <Button title="Search" onPress={() => navigation.navigate('Recipes', { history })} />
         </SafeAreaView>
     )
 }

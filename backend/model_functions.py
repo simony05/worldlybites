@@ -54,11 +54,11 @@ def resnet_prediction(model, image, threshold = 1.8153345e-03):
 
 # second version of model with custom loss function
 custom_objects = {"sum_binary_crossentropy": sum_binary_crossentropy}
-f = open('model.json')
+f = open('backend/model.json')
 data = json.load(f)
 test_model = tf.keras.models.model_from_json(data, custom_objects=custom_objects)
-test_model.load_weights('my_model_weights.h5')
+test_model.load_weights('backend/my_model_weights.h5')
 
-print(resnet_prediction(test_model, 'test_val.jpg'))
+print(resnet_prediction(test_model, 'backend/test_val.jpg'))
 
 
