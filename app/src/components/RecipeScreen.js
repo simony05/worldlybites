@@ -13,7 +13,10 @@ export const RecipeScreen = ({ route }) => {
 
     useEffect(() => {
         fetch('http://169.231.126.186:8081/recipe?ingredients= pasta tomato onion', {
-            method: 'GET'
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         })
         .then(response => response.json())
         .then(recipes => {

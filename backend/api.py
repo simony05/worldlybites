@@ -29,5 +29,5 @@ def recommend_recipe():
 
 if __name__ == "__main__":
    # lets api run on any ip address and port 8081
-   app.run(host='169.231.126.186', port=8081)
+   app.run(host='0.0.0.0', port=8081)
        #host='0.0.0.0', port=8081
