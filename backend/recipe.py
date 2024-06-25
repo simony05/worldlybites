@@ -173,5 +173,5 @@ def get_recs(ingredients, N = 5):
     recommendations = get_recommendations(N, scores)
     return recommendations
 
-recs = get_recs("ground beef, pasta, spaghetti, tomato pasta sauce, bacon, onion, zucchini, cheese")
-print(recs.head())
+# recs = get_recs("ground beef, pasta, spaghetti, tomato pasta sauce, bacon, onion, zucchini, cheese")
+# print(recs.head())
