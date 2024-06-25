@@ -13,7 +13,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 
-df = pd.read_csv("recipe_data/recipes.csv")
+df = pd.read_csv("../recipe_data/recipes.csv")
 
 def ingredient_parser(ingredients):
     measures = [
@@ -105,13 +105,13 @@ def ingredient_parser(ingredients):
               ingredients_list.append(' '.join(items))
     return ingredients_list
 
-recipe_df = pd.read_csv("recipe_data/recipes.csv")
+recipe_df = pd.read_csv("../recipe_data/recipes.csv")
 recipe_df['Parsed_Ingredients'] = recipe_df['Cleaned_Ingredients'].apply(lambda x: ingredient_parser(x))
 df = recipe_df.dropna()
 # df.to_csv("parsed_recipes.csv", index=False)
 
 # load in parsed recipe dataset
-df_recipes = pd.read_csv("backend/parsed_recipes.csv")
+df_recipes = pd.read_csv("parsed_recipes.csv")
 
 # Tfidf needs unicode or string types
 df_recipes['Parsed_Ingredients'] = df_recipes.Parsed_Ingredients.values.astype('U')
@@ -129,9 +129,9 @@ tfidf_recipe = tfidf.transform(df_recipes['Parsed_Ingredients'])
 
 def cos_score(ingredients):
   # load in tdidf model and encodings
-  with open("backend/encoding.pk", 'rb') as f:
+  with open("encoding.pk", 'rb') as f:
       tfidf_encodings = pickle.load(f)
-  with open("backend/model.pk", "rb") as f:
+  with open("model.pk", "rb") as f:
       tfidf = pickle.load(f)
 
   # parse the ingredients using my ingredient_parser
@@ -151,7 +151,7 @@ def cos_score(ingredients):
 
 def get_recommendations(N, scores):
     # load in recipe dataset
-    df_recipes = pd.read_csv("backend/parsed_recipes.csv")
+    df_recipes = pd.read_csv("parsed_recipes.csv")
 
     # order the scores with and filter to get the highest N scores
     top = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:N]
@@ -173,5 +173,5 @@ def get_recs(ingredients, N = 5):
     recommendations = get_recommendations(N, scores)
     return recommendations
 
-# recs = get_recs("ground beef, pasta, spaghetti, tomato pasta sauce, bacon, onion, zucchini, cheese")
-# print(recs.head())
+recs = get_recs("ground beef, pasta, spaghetti, tomato pasta sauce, bacon, onion, zucchini, cheese")
+print(recs.head())

@@ -5,7 +5,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
 import pickle
 
-recipe = pd.read_json('recipe_data/train.json')
+recipe = pd.read_json('../recipe_data/train.json')
 
 # all ingredients
 all_ingredients = set()
@@ -33,11 +33,11 @@ cuisine_classifier = Pipeline([
 cuisine_classifier.fit(recipe['ingredients'].apply(lambda x:  ' '.join(x)), recipe['cuisine'])
 print(cuisine_classifier.score(recipe['ingredients'].apply(lambda x:  ' '.join(x)), recipe['cuisine']))
 
-df_test = pd.read_json('recipe_data/test.json')
+df_test = pd.read_json('../recipe_data/test.json')
 
 print(cuisine_classifier.predict(df_test['ingredients'].apply(lambda x:  ' '.join(x))))
 
-pickle.dump(cuisine_classifier, open('backend/cuisine.pk', 'wb'))
+pickle.dump(cuisine_classifier, open('cuisine.pk', 'wb'))
 
 #with open("cuisine.pk", "rb") as f:
 #        test = pickle.load(f)
