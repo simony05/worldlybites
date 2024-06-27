@@ -3,7 +3,8 @@ import { View, Text, FlatList} from 'react-native';
 
 export const RecipeScreen = ({ route }) => {
 
-    const { history } = route.params;
+    const [isLoading, setIsLoading] = useState(false);
+    const { history } = route.params || [];
     const renderItem = ({ item, index }) => (
         <View>
             <Text>- {item}, {index}</Text>
@@ -12,7 +13,8 @@ export const RecipeScreen = ({ route }) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetch('http://169.231.126.186:8081/recipe?ingredients= pasta tomato onion', {
+        setIsLoading(true);
+        fetch('http://10.0.0.119:5000/recipe?ingredients= pasta tomato onion', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -21,13 +23,15 @@ export const RecipeScreen = ({ route }) => {
         .then(response => response.json())
         .then(recipes => {
             console.log(recipes)
-            //setData(recipes)
+            setData(recipes)
+            setIsLoading(false);
         })
     }, [])
 
     return (
         <View>
             <Text>Recipes</Text>
+            {isLoading ? <Text>Loading...</Text> : null}
             <FlatList 
                 onScrollBeginDrag={() => Keyboard.dismiss()}
                 data={history} 
