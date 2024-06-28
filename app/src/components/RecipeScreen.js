@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList} from 'react-native';
+import { RecipeCard } from '../features/RecipeCard';
 
 export const RecipeScreen = ({ route }) => {
 
@@ -38,6 +39,11 @@ export const RecipeScreen = ({ route }) => {
                 renderItem={renderItem} 
                 keyExtractor={(item, index) => index.toString()}
             />
+            <View>
+                {data.map((cuisine, image, instructions, ingredients, title) => 
+                    <RecipeCard cuisine={cuisine} image={image} instructions={instructions} ingredients={ingredients} title={title} />
+                )}
+            </View>
         </View>
     )
 }
