@@ -39,11 +39,11 @@ export const RecipeScreen = ({ route }) => {
                 renderItem={renderItem} 
                 keyExtractor={(item, index) => index.toString()}
             />
-            <View>
-                {data.map((cuisine, image, instructions, ingredients, title) => 
-                    <RecipeCard cuisine={cuisine} image={image} instructions={instructions} ingredients={ingredients} title={title} />
-                )}
-            </View>
+            <FlatList
+                data={data}
+                renderItem={({ item }) => <RecipeCard data={item} />}
+                keyExtractor={item => item.id.toString()}
+            />
         </View>
     )
 }
