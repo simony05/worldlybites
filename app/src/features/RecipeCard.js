@@ -1,9 +1,10 @@
 import React from 'react';
+import { View, Text } from 'react-native';
 
-export const RecipeCard = ({ cuisine, image, instructions, ingredients, title }) => {
+export const RecipeCard = ({ recipe }) => {
     return (
         <View>
-            <Text>{title}</Text>
+            <Text>{recipe.title}</Text>
         </View>
     );
 };

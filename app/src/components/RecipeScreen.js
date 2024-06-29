@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, FlatList} from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import { RecipeCard } from '../features/RecipeCard';
 
 export const RecipeScreen = ({ route }) => {
@@ -24,8 +24,8 @@ export const RecipeScreen = ({ route }) => {
         })
         .then(response => response.json())
         .then(recipes => {
-            console.log(recipes)
-            setData(Array.from(recipes))
+            const formattedData = Object.values(recipes)
+            setData(formattedData)
             setIsLoading(false);
         })
     }, [])
@@ -40,11 +40,11 @@ export const RecipeScreen = ({ route }) => {
                 renderItem={renderItem} 
                 keyExtractor={(item, index) => index.toString()}
             />
-            <ScrollView>
-                {data.map(recipe => (
-                    <RecipeCard key={recipe.id} recipe={recipe} />
-                ))}
-            </ScrollView>
+            <FlatList
+                data={data}
+                renderItem={({ item }) => <RecipeCard recipe={item} />}
+                keyExtractor={(item, index) => index.toString()}
+            />
         </View>
     )
 }
