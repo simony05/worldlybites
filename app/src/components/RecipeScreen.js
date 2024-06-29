@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList} from 'react-native';
+import { ScrollView, View, Text, FlatList} from 'react-native';
 import { RecipeCard } from '../features/RecipeCard';
 
 export const RecipeScreen = ({ route }) => {
@@ -15,7 +15,8 @@ export const RecipeScreen = ({ route }) => {
 
     useEffect(() => {
         setIsLoading(true);
-        fetch('http://10.0.0.119:5000/recipe?ingredients= pasta tomato onion', {
+        const params = history.join(' ');
+        fetch(`http://10.0.0.119:5000/recipe?ingredients=${params}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -24,7 +25,7 @@ export const RecipeScreen = ({ route }) => {
         .then(response => response.json())
         .then(recipes => {
             console.log(recipes)
-            setData(recipes)
+            setData(Array.from(recipes))
             setIsLoading(false);
         })
     }, [])
@@ -39,11 +40,11 @@ export const RecipeScreen = ({ route }) => {
                 renderItem={renderItem} 
                 keyExtractor={(item, index) => index.toString()}
             />
-            <FlatList
-                data={data}
-                renderItem={({ item }) => <RecipeCard data={item} />}
-                keyExtractor={item => item.id.toString()}
-            />
+            <ScrollView>
+                {data.map(recipe => (
+                    <RecipeCard key={recipe.id} recipe={recipe} />
+                ))}
+            </ScrollView>
         </View>
     )
 }
