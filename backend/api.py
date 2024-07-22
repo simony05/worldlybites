@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
 from rec import rec_api
 from flask_cors import CORS
+import numpy as np
+from PIL import Image
 
 app = Flask(__name__)
 CORS(app)
@@ -26,6 +28,14 @@ def recommend_recipe():
                           }
         count += 1
     return jsonify(response)
+
+@app.route('/camera', methods=['POST'])
+def camera():
+    img = request.files['image']
+    #img = Image.open(img)
+    #array = np.array(img)
+    return jsonify({ 'message': 'Image uploaded successfully'})
+    #return jsonify({'array': array.tolist()}), 200
 
 if __name__ == "__main__":
    # lets api run on any ip address and port 8081
