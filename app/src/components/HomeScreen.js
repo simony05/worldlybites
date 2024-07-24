@@ -1,22 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, SafeAreaView, Button, View, TouchableOpacity, Text } from 'react-native';
 import { colors } from '../utils/colors';
 import { Ingredients } from '../features/Ingredients';
 import { IngredientsList } from '../features/IngredientsList';
-import { Camera, CameraConstants } from 'expo-camera';
+import { Camera } from 'expo-camera';
 
 export const HomeScreen = ({ navigation }) => {
 
-    const TakePicture = () => {
-        const [permission, setPermission] = useState(null);
-        const [camera, setCamera] = useState(null);
-        const [image, setImage] = useState(null);
+    const [permission, setPermission] = useState(null);
+    const [camera, setCamera] = useState(null);
+    const [image, setImage] = useState(null);
 
-        const requestPerm = async () => {
-            const permission = await Camera.requestCameraPermissionsAsync();
-            setPermission(permisssion.status === 'granted');
-        }
-    }
+    const requestPerm = async () => {
+        const getPermission = await Camera.requestCameraPermissionsAsync();
+        setPermission(getPermission.status === 'granted');
+    };
+
+    useEffect(() => {
+        requestPerm();
+    }, []);
 
     const takePic = async () => {
         if (camera) {
@@ -27,18 +29,19 @@ export const HomeScreen = ({ navigation }) => {
 
     const sendImage = async () => {
         const formData = new FormData();
-        formData.append('image', { uri: image, name: 'image.jpg', type : 'image/jpeg' });
+        formData.append('image', { uri: image, name: 'image.jpg', type: 'image/jpeg' });
 
-        const response = await fetch(`http://10.0.0.80:5000/camera`, {
+        fetch('http://10.0.0.80:5000/camera', {
             method: 'POST',
             body: formData,
-        });
-
-        const data = wait.response.json();
-        console.log(data);
-    }
+          })
+           .then(response => response.json())
+           .then(data => console.log(data))
+           .catch(error => console.error(error));
+    };
 
     const [history, setHistory] = useState([]);
+
     const handleDelete = (index) => {
         const newList = [...history];
         newList.splice(index, 1);
@@ -51,18 +54,18 @@ export const HomeScreen = ({ navigation }) => {
                 <Ingredients 
                     style={{ flex: 1, marginRight: 10 }}
                     addIngredient={(ingredient) => {
-                    setHistory([...history, ingredient])
+                        setHistory([...history, ingredient])
                     }}
                 />
                 <View>
-                    {permission ? (
+                    {permission === true ? (
                         <Camera
                             style= {{ flex: 1}}
-                            type = { Camera.Constants.Type.back }
-                            ref = {(ref) => setCamera(ref)}
+                            type={Camera.Constants.Type.back}
+                            ref={(ref) => setCamera(ref)}
                             >
                             <View>
-                                <TouchableOpacity onPress = { takePic }>
+                                <TouchableOpacity onPress={takePic}>
                                     <Text>Take Picture</Text>
                                 </TouchableOpacity>
                             </View>
@@ -71,18 +74,21 @@ export const HomeScreen = ({ navigation }) => {
                         <Text>Camera access restricted</Text>
                     )}
                     {image && (
-                        <Image source = {{ uri: image }} style = {{width: 200, height: 200 }} />
+                        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
                     )}
+                    <TouchableOpacity onPress={sendImage}>
+                        <Text>Scan</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
             <IngredientsList history={history} onDelete={handleDelete} />
             <Button title="Search" onPress={() => {
                 //console.log('History:', history);
-                navigation.navigate('Recipes', { history })}
-             } />
+                navigation.navigate('Recipes', { history })
+            }} />
         </SafeAreaView>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
