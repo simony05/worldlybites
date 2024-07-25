@@ -3,16 +3,18 @@ import { StyleSheet, SafeAreaView, Button, View, TouchableOpacity, Text, Image }
 import { colors } from '../utils/colors';
 import { Ingredients } from '../features/Ingredients';
 import { IngredientsList } from '../features/IngredientsList';
-import { Camera, Constants } from 'expo-camera';                         
+import { Camera, CameraType } from 'expo-camera';                         
 
 export const HomeScreen = ({ navigation }) => {
 
-    console.log('Camera:', Camera);
-    console.log('Camera Constants:', Constants);
-
     const [permission, setPermission] = useState(null);
     const [camera, setCamera] = useState(null);
+    const [type, setType] = useState(CameraType.back);
     const [image, setImage] = useState(null);
+
+    const toggleCameraType = async() => {
+        setType((current) => (current === CameraType.back ? CameraType.front : CameraType.back));
+    };
 
     const requestPerm = async () => {
         const getPermission = await Camera.requestCameraPermissionsAsync();
@@ -64,17 +66,20 @@ export const HomeScreen = ({ navigation }) => {
                     {permission === true ? (
                         <Camera
                             style= {{ flex: 1}}
-                            type={Camera.Constants.back}
+                            type={ type }
                             ref={(ref) => setCamera(ref)}
                             >
                             <View>
                                 <TouchableOpacity onPress={takePic}>
                                     <Text>Take Picture</Text>
                                 </TouchableOpacity>
+                                <TouchableOpacity onPress={toggleCameraType} disabled={permission?.granted ? false : true}>
+                                    <Text>Flip Camera</Text>
+                                </TouchableOpacity>
                             </View>
                         </Camera>
                     ) : (
-                        <Text>Camera access restricted</Text>
+                        <Button title="Grant Permission" onPress={() => reqPerm()} />
                     )}
                     {image && (
                         <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
