@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, Button, View, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, SafeAreaView, Button, View, TouchableOpacity, Text, Image } from 'react-native';
 import { colors } from '../utils/colors';
 import { Ingredients } from '../features/Ingredients';
 import { IngredientsList } from '../features/IngredientsList';
-import { Camera } from 'expo-camera';
+import { Camera, Constants } from 'expo-camera';                         
 
 export const HomeScreen = ({ navigation }) => {
+
+    console.log('Camera:', Camera);
+    console.log('Camera Constants:', Constants);
 
     const [permission, setPermission] = useState(null);
     const [camera, setCamera] = useState(null);
@@ -61,7 +64,7 @@ export const HomeScreen = ({ navigation }) => {
                     {permission === true ? (
                         <Camera
                             style= {{ flex: 1}}
-                            type={Camera.Constants.Type.back}
+                            type={Camera.Constants.back}
                             ref={(ref) => setCamera(ref)}
                             >
                             <View>
