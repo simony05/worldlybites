@@ -1,36 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, SafeAreaView, Button, View, TouchableOpacity, Text, Image } from 'react-native';
 import { colors } from '../utils/colors';
 import { Ingredients } from '../features/Ingredients';
 import { IngredientsList } from '../features/IngredientsList';
-import { Camera, CameraType } from 'expo-camera';                         
+import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 
 export const HomeScreen = ({ navigation }) => {
 
-    const [permission, setPermission] = useState(null);
-    const [camera, setCamera] = useState(null);
-    const [type, setType] = useState(CameraType.back);
+    const camera = useRef(null);
+    const [permission, requestPermission] = useCameraPermissions();
     const [image, setImage] = useState(null);
-
-    const toggleCameraType = async() => {
-        setType((current) => (current === CameraType.back ? CameraType.front : CameraType.back));
-    };
-
-    const requestPerm = async () => {
-        const getPermission = await Camera.requestCameraPermissionsAsync();
-        setPermission(getPermission.status === 'granted');
-    };
-
-    useEffect(() => {
-        requestPerm();
-    }, []);
-
-    const takePic = async () => {
-        if (camera) {
-            const photo = await camera.takePictureAsync();
-            setImage(photo.uri);
-        }
-    }
 
     const sendImage = async () => {
         const formData = new FormData();
@@ -55,40 +34,19 @@ export const HomeScreen = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style= {{ flex : 1, flexDirection: 'row' }}>
                 <Ingredients 
-                    style={{ flex: 1, marginRight: 10 }}
                     addIngredient={(ingredient) => {
                         setHistory([...history, ingredient])
                     }}
                 />
-                <View>
-                    {permission === true ? (
-                        <Camera
-                            style= {{ flex: 1}}
-                            type={ type }
-                            ref={(ref) => setCamera(ref)}
-                            >
-                            <View>
-                                <TouchableOpacity onPress={takePic}>
-                                    <Text>Take Picture</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={toggleCameraType} disabled={permission?.granted ? false : true}>
-                                    <Text>Flip Camera</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </Camera>
-                    ) : (
-                        <Button title="Grant Permission" onPress={() => reqPerm()} />
-                    )}
-                    {image && (
-                        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-                    )}
-                    <TouchableOpacity onPress={sendImage}>
-                        <Text>Scan</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+                {!permission ? (
+                    <View />
+                ) : (
+                    <View>
+                        <Text style={styles.message}>We need your permission to show the camera</Text>
+                        <Button onPress={requestPermission} title="grant permission" />
+                    </View>
+                )}
             <IngredientsList history={history} onDelete={handleDelete} />
             <Button title="Search" onPress={() => {
                 //console.log('History:', history);
@@ -105,4 +63,22 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
+    message: {
+        textAlign: 'center',
+        paddingBottom: 10,
+      },
+      camera: {
+        flex: 1,
+      },
+      buttonContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: 'transparent',
+        margin: 64,
+      },
+      button: {
+        flex: 1,
+        alignSelf: 'flex-end',
+        alignItems: 'center',
+      },
   });
