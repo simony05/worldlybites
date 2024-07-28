@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, SafeAreaView, Button, View, TouchableOpacity, Text, Image } from 'react-native';
+import { StyleSheet, SafeAreaView, Button, View, Modal, TouchableOpacity, Text, Image } from 'react-native';
 import { colors } from '../utils/colors';
 import { Ingredients } from '../features/Ingredients';
 import { IngredientsList } from '../features/IngredientsList';
@@ -7,9 +7,9 @@ import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 
 export const HomeScreen = ({ navigation }) => {
 
-    const camera = useRef(null);
     const [permission, requestPermission] = useCameraPermissions();
     const [image, setImage] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const sendImage = async () => {
         const formData = new FormData();
@@ -32,6 +32,24 @@ export const HomeScreen = ({ navigation }) => {
         setHistory(newList);
     }
 
+    const takePicture = async () => {
+        const photo = await CameraView.takePictureAsync();
+        console.log(photo.uri);
+        setImage(photo);
+    }
+
+    const handleExit = () => {
+        setModalVisible(false);
+    };
+    
+    const handleOpenCamera = () => {
+        setModalVisible(true);
+    };
+
+    if (!permission) {
+        return <View />
+    }
+
     return (
         <SafeAreaView style={styles.container}>
                 <Ingredients 
@@ -39,12 +57,32 @@ export const HomeScreen = ({ navigation }) => {
                         setHistory([...history, ingredient])
                     }}
                 />
-                {!permission ? (
-                    <View />
-                ) : (
+                {!permission.granted ? (
                     <View>
                         <Text style={styles.message}>We need your permission to show the camera</Text>
                         <Button onPress={requestPermission} title="grant permission" />
+                    </View>
+                ) : (
+                    <View>
+                        <TouchableOpacity onPress={handleOpenCamera}>
+                            <Text>Open Camera</Text>
+                        </TouchableOpacity>
+                        <Modal visible={modalVisible} transparent={true}>
+                            <View style={ styles.modal }>
+                                <CameraView
+                                    style={ styles.cameraBox }
+                                    facing={ 'back' }
+                                />
+                                <View style = { styles.row }>
+                                    <TouchableOpacity onPress={takePicture}>
+                                        <Text>Take Picture</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={handleExit}>
+                                        <Text>Exit</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Modal>
                     </View>
                 )}
             <IngredientsList history={history} onDelete={handleDelete} />
@@ -81,4 +119,22 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         alignItems: 'center',
       },
+      text: {
+        color: colors.white,
+      },
+      modal: {
+        flex: 1, 
+        justifyContent: 'center', 
+        alignItems: 'center'
+      },
+      cameraBox: {
+        width: 300,
+        height: 300,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 10,
+      },
+      row: {
+        flexDirection: 'row'
+      }
   });
