@@ -10,18 +10,26 @@ export const HomeScreen = ({ navigation }) => {
     const [permission, requestPermission] = useCameraPermissions();
     const [image, setImage] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const cameraRef = useRef(null);
 
     const sendImage = async () => {
         const formData = new FormData();
-        formData.append('image', { uri: image, name: 'image.jpg', type: 'image/jpeg' });
+        formData.append('image', {
+            uri: image,
+            name: 'image.jpg',
+            type: 'image/jpeg'
+        });
 
         fetch('http://10.0.0.80:5000/camera', {
             method: 'POST',
-            body: formData,
-          })
-           .then(response => response.json())
-           .then(data => console.log(data))
-           .catch(error => console.error(error));
+            body: formData, 
+            headers: { 
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error(error));
     };
 
     const [history, setHistory] = useState([]);
@@ -33,9 +41,12 @@ export const HomeScreen = ({ navigation }) => {
     }
 
     const takePicture = async () => {
-        const photo = await CameraView.takePictureAsync();
-        console.log(photo.uri);
-        setImage(photo);
+        if (cameraRef.current) {
+            const photo = await cameraRef.current.takePictureAsync();
+            setImage(photo.uri);
+            sendImage();
+            setModalVisible(false);
+        }
     }
 
     const handleExit = () => {
@@ -72,6 +83,7 @@ export const HomeScreen = ({ navigation }) => {
                                 <CameraView
                                     style={ styles.cameraBox }
                                     facing={ 'back' }
+                                    ref = { cameraRef }
                                 />
                                 <View style = { styles.row }>
                                     <TouchableOpacity onPress={takePicture}>

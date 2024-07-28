@@ -30,12 +30,12 @@ def recommend_recipe():
     return jsonify(response)
 
 @app.route('/camera', methods=['POST'])
-def camera():
-    img = request.files['image']
-    #img = Image.open(img)
-    #array = np.array(img)
-    return jsonify({ 'message': 'Image uploaded successfully'})
-    #return jsonify({'array': array.tolist()}), 200
+def handle_image():
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image provided'}), 400
+    image = request.files['image']
+    # Do something with the image
+    return jsonify({'message': 'Image received successfully'})
 
 if __name__ == "__main__":
    # lets api run on any ip address and port 8081
