@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
 from rec import rec_api
 from flask_cors import CORS
+import numpy as np
+from PIL import Image
 
 app = Flask(__name__)
 CORS(app)
@@ -26,6 +28,14 @@ def recommend_recipe():
                           }
         count += 1
     return jsonify(response)
+
+@app.route('/camera', methods=['POST'])
+def handle_image():
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image provided'}), 400
+    image = request.files['image']
+    # Do something with the image
+    return jsonify({'message': 'Image received successfully'})
 
 if __name__ == "__main__":
    # lets api run on any ip address and port 8081
