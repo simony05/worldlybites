@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request
 from rec import rec_api
 from flask_cors import CORS
-import numpy as np
-from PIL import Image
+from ultralytics import YOLO
+import cv2
+import tempfile
+import base64
 
 app = Flask(__name__)
 CORS(app)
@@ -30,12 +32,26 @@ def recommend_recipe():
     return jsonify(response)
 
 @app.route('/camera', methods=['POST'])
-def handle_image():
-    if 'image' not in request.files:
-        return jsonify({'error': 'No image provided'}), 400
-    image = request.files['image']
-    # Do something with the image
-    return jsonify({'message': 'Image received successfully'})
+def upload_image():
+    image_base64 = request.form['image']
+    image_bytes = base64.b64decode(image_base64)
+    temp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
+    temp_file.write(image_bytes)
+    temp_file.seek(0)
+    img = cv2.imread(temp_file.name)
+    # Load the exported ONNX model
+    onnx_model = YOLO("best.onnx")
+    # Run inference
+    results = onnx_model(img)
+    # results in a list
+    class_names = set()
+    for result in results:
+        for box in result.boxes:
+            class_id = int(box.cls)
+            class_name = onnx_model.names[class_id]
+            class_names.add(class_name)
+
+    return jsonify({'ingredients': list(class_names)})
 
 if __name__ == "__main__":
    # lets api run on any ip address and port 8081

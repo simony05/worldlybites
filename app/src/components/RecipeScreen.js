@@ -23,11 +23,11 @@ export const RecipeScreen = ({ route }) => {
         const fetchData = async () => {
             setIsLoading(true);
             const params = ingredients.history.join(' ');
-            console.log(params);
-            const response = await fetch(`http://10.0.0.80:5000/recipe?ingredients=${params}`);
+            //console.log(params);
+            const response = await fetch(`http://10.0.0.119:5000/recipe?ingredients=${params}`);
             const recipes = await response.json();
             //const formattedData = Object.values(recipes);
-            setData( Object.values(recipes));
+            setData(Object.values(recipes));
             setIsLoading(false);
         };
         fetchData();

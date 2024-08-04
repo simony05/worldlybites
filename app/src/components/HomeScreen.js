@@ -4,31 +4,32 @@ import { colors } from '../utils/colors';
 import { Ingredients } from '../features/Ingredients';
 import { IngredientsList } from '../features/IngredientsList';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import * as Network from 'expo-network';
 
 export const HomeScreen = ({ navigation }) => {
 
     const [permission, requestPermission] = useCameraPermissions();
     const [image, setImage] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const [scanning, setScanning] = useState(false);
     const cameraRef = useRef(null);
 
     const sendImage = async () => {
+        
         const formData = new FormData();
-        formData.append('image', {
-            uri: image,
-            name: 'image.jpg',
-            type: 'image/jpeg'
-        });
-
-        fetch('http://10.0.0.80:5000/camera', {
+        formData.append('image', image);
+        //console.log('Sending image:', image);
+        setScanning(true);
+        fetch('http://10.0.0.119:5000/camera', {
             method: 'POST',
-            body: formData, 
-            headers: { 
-                'Content-Type': 'application/json'
-            }
+            headers: {
+            'Content-Type': 'multipart/form-data',
+            },
+            body: formData,
         })
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then(data => addList(data.ingredients))
+        .then(setScanning(false))
         .catch(error => console.error(error));
     };
 
@@ -40,10 +41,22 @@ export const HomeScreen = ({ navigation }) => {
         setHistory(newList);
     }
 
+    const addList = (ingrs) => {
+        if (Array.isArray(ingrs)) {
+            setHistory([...history, ...ingrs]);
+        } else if (ingrs && ingrs.message && Array.isArray(ingrs.message)) {
+            setHistory([...history, ...ingrs.message]);
+        } else {
+            console.error("Error: ingrs is not an array or an object with a 'message' property that is an array");
+        }
+    }
+
     const takePicture = async () => {
         if (cameraRef.current) {
-            const photo = await cameraRef.current.takePictureAsync();
-            setImage(photo.uri);
+            const options = { quality: 1, base64: true };
+            const photo = await cameraRef.current.takePictureAsync(options);
+            setImage(photo.base64);
+            //console.log('Image set:', image);
             sendImage();
             setModalVisible(false);
         }
@@ -56,6 +69,14 @@ export const HomeScreen = ({ navigation }) => {
     const handleOpenCamera = () => {
         setModalVisible(true);
     };
+
+    const getIp = () => {
+        Network.getIpAddressAsync().then((ip) => {
+          console.log(ip);
+        }).catch((error) => {
+          console.error(error);
+        });
+    }
 
     if (!permission) {
         return <View />
@@ -97,6 +118,12 @@ export const HomeScreen = ({ navigation }) => {
                         </Modal>
                     </View>
                 )}
+            { scanning ?
+                <View>
+                    <Text>Scanning image</Text>
+                </View>
+                : <></>
+            }
             <IngredientsList history={history} onDelete={handleDelete} />
             <Button title="Search" onPress={() => {
                 //console.log('History:', history);
