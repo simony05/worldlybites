@@ -17,6 +17,30 @@ def recommend_recipe():
     ingredients = request.args.get('ingredients')
     recipe = rec_api(ingredients)
     
+    # cuisine format
+    cuisine_map = {
+        "italian": "Italian",
+        "mexican": "Mexican",
+        "southern_us": "American",
+        "indian": "Indian",
+        "chinese": "Chinese",
+        "french": "French",
+        "cajun_creole": "American",
+        "thai": "Thai",
+        "japanese": "Japanese",
+        "greek": "Greek",
+        "spanish": "Spanish",
+        "korean": "Korean",
+        "vietnamese": "Vietnamese",
+        "moroccan": "Moroccan",
+        "british": "British",
+        "filipino": "Filipino",
+        "irish": "Irish",
+        "jamaican": "Jamaican",
+        "russian": "Russian",
+        "brazilian": "Brazilian"
+    }
+
     # We need to turn output into JSON. 
     response = {}
     count = 0    
@@ -26,7 +50,7 @@ def recommend_recipe():
                             'ingredients': str(row['Ingredients']),
                             'instructions': str(row['Instructions']),
                             'image': row["Image_Name"],
-                            'cuisine': str(row['Cuisine']),
+                            'cuisine': cuisine_map.get(str(row['Cuisine'])),
                           }
         count += 1
     return jsonify(response)

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Keyboard } from 'react-native';
+import { SafeAreaView, View, Text, FlatList, Keyboard } from 'react-native';
 import { RecipeCard } from '../features/RecipeCard';
 
 export const RecipeScreen = ({ route }) => {
@@ -34,7 +34,7 @@ export const RecipeScreen = ({ route }) => {
     }, [ingredients])
 
     return (
-        <View>
+        <SafeAreaView>
             <Text>Recipes</Text>
             {isLoading ? <Text>Loading...</Text> : null}
             <FlatList 
@@ -48,6 +48,6 @@ export const RecipeScreen = ({ route }) => {
                 renderItem={({ item }) => <RecipeCard recipe={item} />}
                 keyExtractor={(item, index) => index.toString()}
             />
-        </View>
+        </SafeAreaView>
     )
 }
