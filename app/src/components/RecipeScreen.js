@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, View, Text, FlatList, Keyboard } from 'react-native';
 import { RecipeCard } from '../features/RecipeCard';
+import { ActivityIndicator } from 'react-native';
 
 export const RecipeScreen = ({ route }) => {
 
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [ingredients, setIngredients] = useState([]);
     //const { history } = route.params || [];
     
@@ -21,7 +22,6 @@ export const RecipeScreen = ({ route }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            setIsLoading(true);
             const params = ingredients.history.join(' ');
             //console.log(params);
             const response = await fetch(`http://10.0.0.119:5000/recipe?ingredients=${params}`);
@@ -35,19 +35,32 @@ export const RecipeScreen = ({ route }) => {
 
     return (
         <SafeAreaView>
-            <Text>Recipes</Text>
-            {isLoading ? <Text>Loading...</Text> : null}
-            <FlatList 
-                onScrollBeginDrag={() => Keyboard.dismiss()}
-                data={ingredients} 
-                renderItem={renderItem} 
-                keyExtractor={(item, index) => index.toString()}
-            />
-            <FlatList
-                data={data}
-                renderItem={({ item }) => <RecipeCard recipe={item} />}
-                keyExtractor={(item, index) => index.toString()}
-            />
+            <View style={{ padding: 20, alignItems: 'center' }}>
+                <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Worldly Bites</Text>
+            </View>
+            {isLoading ? (
+               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: '100%', padding: 20 }}>
+                    <ActivityIndicator
+                        size="large"
+                        color="#666"
+                        animating={isLoading}
+                    />
+                </View>
+            ) : (
+              <>
+                <FlatList 
+                    onScrollBeginDrag={() => Keyboard.dismiss()}
+                    data={ingredients} 
+                    renderItem={renderItem} 
+                    keyExtractor={(item, index) => index.toString()}
+                />
+                <FlatList
+                    data={data}
+                    renderItem={({ item }) => <RecipeCard recipe={item} />}
+                    keyExtractor={(item, index) => index.toString()}
+                />
+              </>
+            )}
         </SafeAreaView>
     )
 }

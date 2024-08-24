@@ -5,6 +5,7 @@ import { Ingredients } from '../features/Ingredients';
 import { IngredientsList } from '../features/IngredientsList';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import * as Network from 'expo-network';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export const HomeScreen = ({ navigation }) => {
 
@@ -47,7 +48,7 @@ export const HomeScreen = ({ navigation }) => {
         } else if (ingrs && ingrs.message && Array.isArray(ingrs.message)) {
             setHistory([...history, ...ingrs.message]);
         } else {
-            console.error("Error: ingrs is not an array or an object with a 'message' property that is an array");
+            console.error("error");
         }
     }
 
@@ -84,6 +85,9 @@ export const HomeScreen = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <View style={{ padding: 20, alignItems: 'center' }}>
+                <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Worldly Bites</Text>
+            </View>
                 <Ingredients 
                     addIngredient={(ingredient) => {
                         setHistory([...history, ingredient])
@@ -107,11 +111,17 @@ export const HomeScreen = ({ navigation }) => {
                                     ref = { cameraRef }
                                 />
                                 <View style = { styles.row }>
-                                    <TouchableOpacity onPress={takePicture}>
-                                        <Text>Take Picture</Text>
+                                    <TouchableOpacity onPress={takePicture} style = {{ paddingHorizontal: 20 }}>
+                                        <View style = {{ flexDirection: 'row' }}>
+                                            <Icon name="camera" size={24} color="#333"/>
+                                            <Text style = {{ padding: 4 }}>Scan</Text>
+                                        </View>
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={handleExit}>
-                                        <Text>Exit</Text>
+                                    <TouchableOpacity onPress={handleExit} style = {{ paddingHorizontal: 20 }}>
+                                        <View style = {{ flexDirection: 'row' }}>
+                                            <Icon name="times-circle" size={24} color="#333"/>
+                                            <Text style = {{ padding: 4 }}>Exit</Text>
+                                        </View>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -136,7 +146,7 @@ export const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.darkBlue,
+      backgroundColor: colors.white,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -159,7 +169,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
       },
       text: {
-        color: colors.white,
+        color: 'black',
       },
       modal: {
         flex: 1, 

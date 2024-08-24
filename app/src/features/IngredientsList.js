@@ -2,13 +2,14 @@ import React from 'react';
 import { View, Text, Button, StyleSheet, FlatList, Keyboard } from 'react-native';
 import { colors } from '../utils/colors';
 import { fontSizes, spacing } from '../utils/sizes';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export const IngredientsList = ({ history, onDelete }) => {
 
     const renderItem = ({ item, index }) => (
-        <View>
-            <Text style={styles.item}>- {item}, {index}</Text>
-            <Button title='X' onPress={() => onDelete(index)} />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <Text style={styles.item}>• {item} </Text>
+            <Icon name="times-circle" size={16} color="#333" onPress={() => onDelete(index)} />
         </View>
     );
 
@@ -31,12 +32,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     item: {
-        fontSize: fontSizes.md,
-        color: colors.white,
+        fontSize: 16,
+        color: 'black',
     },
     title: {
-        color: colors.white,
-        fontSize: fontSizes.md,
+        color: 'black',
+        fontSize: 24,
         padding: spacing.md,
         fontWeight: 'bold',
     }
