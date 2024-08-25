@@ -55,41 +55,46 @@ export const RecipeCard = ({ recipe }) => {
                 transparent={true}
                 onRequestClose={() => setShowModal(false)}
             >
-                <TouchableOpacity onPress={() => setShowModal(false)} style={{ flex: 1 }}>
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-                        <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 10 }}>
-                            <View
-                                style={{
-                                    backgroundColor: 'white',
-                                    padding: 20,
-                                    borderRadius: 10,
-                                    width: 300,
-                                    maxWidth: '90%',
-                                    marginHorizontal: 20,
-                                }}
-                            >
-                                <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', paddingBottom: 10 }}>
-                                    {recipe.title}
-                                </Text>
-                                <Text style={{ fontSize: 16, fontWeight: 'bold', paddingBottom: 10 }}>Ingredients:</Text>
-                                <View>
-                                    {recipe.ingredients.split(',').map((ingredient, index) => (
-                                        <Text key={index} style={{ paddingHorizontal: 10 }}>
-                                            • {ingredient.replace(/[\[\]']/g, '')}
-                                        </Text>
-                                    ))}
-                                </View>
-                                <Text style={{ fontSize: 16, fontWeight: 'bold', paddingTop: 10, paddingBottom: 10 }}>Steps:</Text>
-                                <Text>{recipe.instructions.replace(/[\[\]']/g, '')}</Text>
-                                <TouchableOpacity onPress={() => setShowModal(false)}>
-                                    <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 20 }}>
-                                        <Icon name="times-circle" size={24} color="#333" />
-                                    </View>
-                                </TouchableOpacity>
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    }}
+                >
+                    <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 10 }}>
+                        <View
+                            style={{
+                                backgroundColor: 'white',
+                                padding: 20,
+                                borderRadius: 10,
+                                width: 300,
+                                maxWidth: '90%',
+                                marginHorizontal: 20,
+                            }}
+                        >
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', paddingBottom: 10 }}>
+                                {recipe.title}
+                            </Text>
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', paddingBottom: 10 }}>Ingredients:</Text>
+                            <View>
+                                {recipe.ingredients.split(',').map((ingredient, index) => (
+                                    <Text key={index} style={{ paddingHorizontal: 10 }}>
+                                        • {ingredient.replace(/[\[\]']/g, '')}
+                                    </Text>
+                                ))}
                             </View>
-                        </ScrollView>
-                    </View>
-                </TouchableOpacity>
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', paddingTop: 10, paddingBottom: 10 }}>Steps:</Text>
+                            <Text>{recipe.instructions.replace(/[\[\]']/g, '')}</Text>
+                            <TouchableOpacity onPress={() => setShowModal(false)}>
+                                <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 20 }}>
+                                    <Icon name="times-circle" size={24} color="#333" />
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
+                </View>
             </Modal>
         </TouchableOpacity>
     );
