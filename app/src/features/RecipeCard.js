@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList, Modal, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, FlatList, Modal, ScrollView, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export const RecipeList = ({ recipes }) => {
@@ -50,49 +50,47 @@ export const RecipeCard = ({ recipe }) => {
                 </View>
             </View>
             <Modal
-    visible={showModal}
-    animationType="slide"
-    transparent={true}
->
-    <View
-        style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        }}
-    >
-        <View
-            style={{
-                backgroundColor: 'white',
-                padding: 20,
-                borderRadius: 10,
-                width: 300,
-                maxWidth: '90%',
-                marginHorizontal: 20,
-            }}
-        >
-            <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', paddingBottom: 10 }}>
-                {recipe.title}
-            </Text>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', paddingBottom: 10 }}>Ingredients:</Text>
-            <View>
-                {recipe.ingredients.split(',').map((ingredient, index) => (
-                    <Text key={index} style={{ paddingHorizontal: 10 }}>
-                        • {ingredient.replace(/[\[\]']/g, '')}
-                    </Text>
-                ))}
-            </View>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', paddingTop: 10, paddingBottom: 10 }}>Steps:</Text>
-            <Text>{recipe.instructions.replace(/[\[\]']/g, '')}</Text>
-            <TouchableOpacity onPress={() => setShowModal(false)}>
-                <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 20 }}>
-                    <Icon name="times-circle" size={24} color="#333" />
-                </View>
-            </TouchableOpacity>
-        </View>
-    </View>
-</Modal>
+                visible={showModal}
+                animationType="slide"
+                transparent={true}
+                onRequestClose={() => setShowModal(false)}
+            >
+                <TouchableOpacity onPress={() => setShowModal(false)} style={{ flex: 1 }}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                        <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 10 }}>
+                            <View
+                                style={{
+                                    backgroundColor: 'white',
+                                    padding: 20,
+                                    borderRadius: 10,
+                                    width: 300,
+                                    maxWidth: '90%',
+                                    marginHorizontal: 20,
+                                }}
+                            >
+                                <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', paddingBottom: 10 }}>
+                                    {recipe.title}
+                                </Text>
+                                <Text style={{ fontSize: 16, fontWeight: 'bold', paddingBottom: 10 }}>Ingredients:</Text>
+                                <View>
+                                    {recipe.ingredients.split(',').map((ingredient, index) => (
+                                        <Text key={index} style={{ paddingHorizontal: 10 }}>
+                                            • {ingredient.replace(/[\[\]']/g, '')}
+                                        </Text>
+                                    ))}
+                                </View>
+                                <Text style={{ fontSize: 16, fontWeight: 'bold', paddingTop: 10, paddingBottom: 10 }}>Steps:</Text>
+                                <Text>{recipe.instructions.replace(/[\[\]']/g, '')}</Text>
+                                <TouchableOpacity onPress={() => setShowModal(false)}>
+                                    <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 20 }}>
+                                        <Icon name="times-circle" size={24} color="#333" />
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </ScrollView>
+                    </View>
+                </TouchableOpacity>
+            </Modal>
         </TouchableOpacity>
     );
 };
@@ -101,20 +99,20 @@ const wrapText = (text, maxLength) => {
     const words = text.split(' ');
     const lines = [];
     let line = '';
-  
+
     for (let i = 0; i < words.length; i++) {
-      if (line.length + words[i].length > maxLength) {
-        lines.push(line);
-        line = '';
-      }
-      line += words[i] + ' ';
+        if (line.length + words[i].length > maxLength) {
+            lines.push(line);
+            line = '';
+        }
+        line += words[i] + ' ';
     }
     if (line) {
-      lines.push(line.trim());
+        lines.push(line.trim());
     }
-  
+
     return lines;
-  };
+};
 
 const styles = StyleSheet.create({
     recipeTitle: {

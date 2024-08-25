@@ -135,7 +135,8 @@ export const HomeScreen = ({ navigation }) => {
                 : <></>
             }
             <IngredientsList history={history} onDelete={handleDelete} />
-            <Button title="Search" onPress={() => {
+            <Button titleStyle={{ color: 'black' }}
+                color="black" title="Search Recipes" onPress={() => {
                 //console.log('History:', history);
                 navigation.navigate('Recipes', { history })
             }} />

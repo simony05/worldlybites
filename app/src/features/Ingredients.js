@@ -17,18 +17,24 @@ export const Ingredients = ({ addIngredient }) => {
             <View style={styles.inputContainer}>
                 <TextInput 
                     style={styles.textInput}
-                    label="Add ingredient one at a time (ex: butter, apple, beef)"
+                    label="Add ingredient one at a time"
                     onChangeText={setIngredient}
                     value={ingredient}
+                    color="black"
                 />
                 <View style={styles.button}>
                     {ingredient != '' ?
                         <Button 
+                            titleStyle={{ color: 'black' }}
+                            color="black"
                             title="Add"
                             onPress={submit}
+                            
                         />
                         : 
                         <Button
+                            titleStyle={{ color: 'black' }}
+                            color="black"
                             title="Add"
                         />
                     }
@@ -45,6 +51,7 @@ const styles = StyleSheet.create({
     textInput: {
         flex: 1,
         marginRight: spacing.sm,
+        backgroundColor: '#D3D3D3'
     },
     inputContainer: {
         padding: spacing.lg,
