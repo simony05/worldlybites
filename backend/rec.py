@@ -36,14 +36,6 @@ def get_recommendations(N, scores):
     return recommendations
 
 def rec_api(ingredients, N=5):
-    """
-    The reccomendation system takes in a list of ingredients and returns a list of top 5 
-    recipes based of of cosine similarity. 
-    :param ingredients: a list of ingredients
-    :param N: the number of reccomendations returned 
-    :return: top 5 reccomendations for cooking recipes
-    """
-
     # load in tdidf model and encodings
     with open("encoding.pk", 'rb') as f:
         tfidf_encodings = pickle.load(f)
